@@ -93,7 +93,7 @@ class AsciiAgent(BaseAgent):
 		latest_touch_name = lt.player_name
 		cars = packet.game_cars
 		for n in range(packet.num_cars):
-			car = cars[i]
+			car = cars[n]
 			if n != self.index:
 				i = n if n < self.index else n - 1
 				car_phys = car.physics
@@ -139,7 +139,7 @@ class AsciiAgent(BaseAgent):
 	
 	def initialize_agent(self):
 		
-		self.interpreter
+		self.interpreter = None
 		
 		cwd = os.getcwd()
 		
