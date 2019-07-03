@@ -77,12 +77,25 @@ class AsciiAgent(BaseAgent):
 		inputs[36] = game_info.is_overtime
 		inputs[37] = game_info.is_match_ended
 		
+		# Latest touch
+		lt = packet.game_ball.latest_touch
+		inputs[40] = lt.hit_location.x
+		inputs[41] = lt.hit_location.y
+		inputs[42] = lt.hit_location.z
+		inputs[43] = lt.hit_normal.x
+		inputs[44] = lt.hit_normal.y
+		inputs[45] = lt.hit_normal.z
+		inputs[47] = lt.team
+		inputs[48] = lt.time_seconds
+		
 		# Other cars in the game
 		inputs[99] = packet.num_cars
+		latest_touch_name = lt.player_name
 		cars = packet.game_cars
-		for i in range(packet.num_cars):
+		for n in range(packet.num_cars):
 			car = cars[i]
-			if i != self.index:
+			if n != self.index:
+				i = n if n < self.index else n - 1
 				car_phys = car.physics
 				inputs[100+i*20] = car_phys.location.x * side
 				inputs[101+i*20] = car_phys.location.y * side
@@ -101,6 +114,12 @@ class AsciiAgent(BaseAgent):
 				
 				inputs[126+i*20] = car.is_demolished
 				inputs[127+i*20] = car.has_wheel_contact
+				
+				if car.name == latest_touch_name:
+					inputs[46] = i
+				
+			elif self.name == latest_touch_name:
+				inputs[46] = -1
 		
 		return inputs
 		
