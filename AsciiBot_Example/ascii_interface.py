@@ -23,7 +23,7 @@ class AsciiAgent(BaseAgent):
 		return self.team
 	
 	def create_inputs(self, num_cars):
-		for i in range(len(self.game_packet), num_cars*20+100, 1):
+		for i in range(len(self.game_packet), (num_cars-1)*20+100, 1):
 			self.game_packet.append(0)
 	
 	def parse(self, packet: GameTickPacket, inputs):
@@ -112,8 +112,8 @@ class AsciiAgent(BaseAgent):
 				
 				inputs[112+i*20] = car.is_super_sonic
 				
-				inputs[126+i*20] = car.is_demolished
-				inputs[127+i*20] = car.has_wheel_contact
+				inputs[116+i*20] = car.is_demolished
+				inputs[117+i*20] = car.has_wheel_contact
 				
 				if car.name == latest_touch_name:
 					inputs[46] = i
