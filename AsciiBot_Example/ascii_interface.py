@@ -120,7 +120,7 @@ class AsciiAgent(BaseAgent):
 	
 	def initialize_agent(self):
 		
-		global interpreter
+		self.interpreter
 		
 		cwd = os.getcwd()
 		
@@ -136,7 +136,7 @@ class AsciiAgent(BaseAgent):
 		with open(FILE_NAME, encoding='utf-8') as file:
 			program = file.read()
 		
-		interpreter = AsciiDotsInterpreter(env, program, program_dir, True)
+		self.interpreter = AsciiDotsInterpreter(env, program, program_dir, True)
 		
 		self.p_time = 0
 		
@@ -149,9 +149,9 @@ class AsciiAgent(BaseAgent):
 		self.create_inputs(packet.num_cars)
 		if self.p_time - packet.game_info.seconds_elapsed < 0:
 			self.p_time = packet.game_info.seconds_elapsed
-			interpreter.send(self.parse(packet, self.game_packet))
-			interpreter.step()
-			return self.get(interpreter.recieve())
+			self.interpreter.send(self.parse(packet, self.game_packet))
+			self.interpreter.step()
+			return self.get(self.interpreter.recieve())
 		else:
 			return SimpleControllerState()
 			self.p_time = packet.game_info.seconds_elapsed
