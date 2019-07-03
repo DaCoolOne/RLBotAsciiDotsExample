@@ -45,7 +45,6 @@ class OperChar(Char):
 
     def calc(self, x, y):
         if self.func is None:
-            print(x, y)
             function_dict = {
                 '+': (lambda x, y: x + y),
                 '-': (lambda x, y: x - y),
@@ -75,7 +74,7 @@ class OperChar(Char):
 
                 'x': (lambda x, y: math.atan2(x, y)),
                 'X': (lambda x, y: math.atan2(x, y) / math.pi * 180),
-                'a': (lambda x, y: x / math.pi * 180 if y else x / 180 * math.pi),
+                'r': (lambda x, y: x / math.pi * 180 if y else x / 180 * math.pi),
             }
 
             unicode_substitutions = {
