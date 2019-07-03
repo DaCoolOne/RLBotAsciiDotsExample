@@ -52,9 +52,9 @@ class AsciiAgent(BaseAgent):
 		inputs[13] = agent_car_phys.velocity.x * side
 		inputs[14] = agent_car_phys.velocity.y * side
 		inputs[15] = agent_car_phys.velocity.z
-		inputs[16] = (agent_car_phys.rotation.yaw + math.pi * team) % (math.pi * 2)
-		inputs[17] = agent_car_phys.rotation.pitch
-		inputs[18] = agent_car_phys.rotation.roll
+		inputs[16] = (agent_car_phys.rotation.yaw / math.pi * 180 + 180 * team) % 360
+		inputs[17] = agent_car_phys.rotation.pitch / math.pi * 180
+		inputs[18] = agent_car_phys.rotation.roll / math.pi * 180
 		inputs[19] = agent_car_phys.angular_velocity.x * side
 		inputs[20] = agent_car_phys.angular_velocity.y * side
 		inputs[21] = agent_car_phys.angular_velocity.z
@@ -103,9 +103,9 @@ class AsciiAgent(BaseAgent):
 				inputs[103+i*20] = car_phys.velocity.x * side
 				inputs[104+i*20] = car_phys.velocity.y * side
 				inputs[105+i*20] = car_phys.velocity.z
-				inputs[106+i*20] = (car_phys.rotation.yaw + math.pi * team) % (math.pi * 2)
-				inputs[107+i*20] = car_phys.rotation.pitch
-				inputs[108+i*20] = car_phys.rotation.roll
+				inputs[106+i*20] = (car_phys.rotation.yaw / math.pi * 180 + 180 * team) % 360
+				inputs[107+i*20] = car_phys.rotation.pitch / math.pi * 180
+				inputs[108+i*20] = car_phys.rotation.roll / math.pi * 180
 				inputs[109+i*20] = car_phys.angular_velocity.x * side
 				inputs[110+i*20] = car_phys.angular_velocity.y * side
 				inputs[111+i*20] = car_phys.angular_velocity.z
