@@ -22,100 +22,85 @@ class AsciiAgent(BaseAgent):
 	def get_team(self):
 		return self.team
 	
-	def parse(self, packet: GameTickPacket):
+	def create_inputs(self, num_cars):
+		for i in range(len(self.game_packet), num_cars*20+100, 1):
+			self.game_packet.append(0)
+	
+	def parse(self, packet: GameTickPacket, inputs):
 		side = self.get_side()
 		team = self.get_team()
-		inputs = []
 		
 		# Ball
 		game_ball = packet.game_ball.physics
-		inputs.append(game_ball.location.x * side)
-		inputs.append(game_ball.location.y * side)
-		inputs.append(game_ball.location.z)
-		inputs.append(game_ball.velocity.x * side)
-		inputs.append(game_ball.velocity.y * side)
-		inputs.append(game_ball.velocity.z)
-		inputs.append(game_ball.angular_velocity.x * side)
-		inputs.append(game_ball.angular_velocity.y * side)
-		inputs.append(game_ball.angular_velocity.z)
-		inputs.append(packet.game_ball.drop_shot_info.damage_index)
+		inputs[0] = game_ball.location.x * side
+		inputs[1] = game_ball.location.y * side
+		inputs[2] = game_ball.location.z
+		inputs[3] = game_ball.velocity.x * side
+		inputs[4] = game_ball.velocity.y * side
+		inputs[5] = game_ball.velocity.z
+		inputs[6] = game_ball.angular_velocity.x * side
+		inputs[7] = game_ball.angular_velocity.y * side
+		inputs[8] = game_ball.angular_velocity.z
+		inputs[9] = packet.game_ball.drop_shot_info.damage_index
 		
 		# Agent
 		agent_car = packet.game_cars[self.index]
 		agent_car_phys = agent_car.physics
-		inputs.append(agent_car_phys.location.x * side)
-		inputs.append(agent_car_phys.location.y * side)
-		inputs.append(agent_car_phys.location.z)
-		inputs.append(agent_car_phys.velocity.x * side)
-		inputs.append(agent_car_phys.velocity.y * side)
-		inputs.append(agent_car_phys.velocity.z)
-		inputs.append((agent_car_phys.rotation.yaw + math.pi * team) % (math.pi * 2))
-		inputs.append(agent_car_phys.rotation.pitch)
-		inputs.append(agent_car_phys.rotation.roll)
-		inputs.append(agent_car_phys.angular_velocity.x * side)
-		inputs.append(agent_car_phys.angular_velocity.y * side)
-		inputs.append(agent_car_phys.angular_velocity.z)
+		inputs[10] = agent_car_phys.location.x * side
+		inputs[11] = agent_car_phys.location.y * side
+		inputs[12] = agent_car_phys.location.z
+		inputs[13] = agent_car_phys.velocity.x * side
+		inputs[14] = agent_car_phys.velocity.y * side
+		inputs[15] = agent_car_phys.velocity.z
+		inputs[16] = (agent_car_phys.rotation.yaw + math.pi * team) % (math.pi * 2)
+		inputs[17] = agent_car_phys.rotation.pitch
+		inputs[18] = agent_car_phys.rotation.roll
+		inputs[19] = agent_car_phys.angular_velocity.x * side
+		inputs[20] = agent_car_phys.angular_velocity.y * side
+		inputs[21] = agent_car_phys.angular_velocity.z
 		
-		inputs.append(agent_car.is_super_sonic)
-		inputs.append(agent_car.jumped)
-		inputs.append(agent_car.double_jumped)
-		inputs.append(agent_car.boost)
-		inputs.append(agent_car.is_demolished)
-		inputs.append(agent_car.has_wheel_contact)
-		
-		# Reserved
-		inputs.append(None)
-		inputs.append(None)
+		inputs[22] = agent_car.is_super_sonic
+		inputs[23] = agent_car.jumped
+		inputs[24] = agent_car.double_jumped
+		inputs[25] = agent_car.boost
+		inputs[26] = agent_car.is_demolished
+		inputs[27] = agent_car.has_wheel_contact
 		
 		# Game info
 		game_info = packet.game_info
-		inputs.append(game_info.seconds_elapsed)
-		inputs.append(game_info.game_time_remaining)
-		inputs.append(game_info.is_unlimited_time)
-		inputs.append(game_info.is_kickoff_pause)
-		inputs.append(game_info.is_round_active)
-		inputs.append(game_info.world_gravity_z)
-		inputs.append(game_info.is_overtime)
-		inputs.append(game_info.is_match_ended)
-		
-		# Reserved
-		while len(inputs) < 98:
-			inputs.append(None)
+		inputs[30] = game_info.seconds_elapsed
+		inputs[31] = game_info.game_time_remaining
+		inputs[32] = game_info.is_unlimited_time
+		inputs[33] = game_info.is_kickoff_pause
+		inputs[34] = game_info.is_round_active
+		inputs[35] = game_info.world_gravity_z
+		inputs[36] = game_info.is_overtime
+		inputs[37] = game_info.is_match_ended
 		
 		# Other cars in the game
-		inputs.append(packet.num_cars)
+		inputs[99] = packet.num_cars
 		cars = packet.game_cars
 		for i in range(packet.num_cars):
 			car = cars[i]
 			if i != self.index:
 				car_phys = car.physics
-				inputs.append(car_phys.location.x * side)
-				inputs.append(car_phys.location.y * side)
-				inputs.append(car_phys.location.z)
-				inputs.append(car_phys.velocity.x * side)
-				inputs.append(car_phys.velocity.y * side)
-				inputs.append(car_phys.velocity.z)
-				inputs.append((car_phys.rotation.yaw + math.pi * team) % (math.pi * 2))
-				inputs.append(car_phys.rotation.pitch)
-				inputs.append(car_phys.rotation.roll)
-				inputs.append(car_phys.angular_velocity.x * side)
-				inputs.append(car_phys.angular_velocity.y * side)
-				inputs.append(car_phys.angular_velocity.z)
+				inputs[100+i*20] = car_phys.location.x * side
+				inputs[101+i*20] = car_phys.location.y * side
+				inputs[102+i*20] = car_phys.location.z
+				inputs[103+i*20] = car_phys.velocity.x * side
+				inputs[104+i*20] = car_phys.velocity.y * side
+				inputs[105+i*20] = car_phys.velocity.z
+				inputs[106+i*20] = (car_phys.rotation.yaw + math.pi * team) % (math.pi * 2)
+				inputs[107+i*20] = car_phys.rotation.pitch
+				inputs[108+i*20] = car_phys.rotation.roll
+				inputs[109+i*20] = car_phys.angular_velocity.x * side
+				inputs[110+i*20] = car_phys.angular_velocity.y * side
+				inputs[111+i*20] = car_phys.angular_velocity.z
 				
-				inputs.append(car.is_super_sonic)
+				inputs[112+i*20] = car.is_super_sonic
 				
-				# Reserved
-				inputs.append(None)
-				inputs.append(None)
-				inputs.append(None)
-				inputs.append(None)
-				
-				inputs.append(car.is_demolished)
-				inputs.append(car.has_wheel_contact)
-				
-				# Reserved
-				inputs.append(None)
-				inputs.append(None)
+				inputs[126+i*20] = car.is_demolished
+				inputs[127+i*20] = car.has_wheel_contact
 		
 		return inputs
 		
@@ -153,15 +138,23 @@ class AsciiAgent(BaseAgent):
 		
 		interpreter = AsciiDotsInterpreter(env, program, program_dir, True)
 		
+		self.p_time = 0
+		
 		self.game_packet = []
 		self.controller_state = SimpleControllerState()
 		
 		os.chdir(cwd)
 	
 	def get_output(self, packet: GameTickPacket) -> SimpleControllerState:
-		interpreter.send(self.parse(packet))
-		interpreter.step()
-		return self.get(interpreter.recieve())
+		self.create_inputs(packet.num_cars)
+		if self.p_time - packet.game_info.seconds_elapsed < 0:
+			self.p_time = packet.game_info.seconds_elapsed
+			interpreter.send(self.parse(packet, self.game_packet))
+			interpreter.step()
+			return self.get(interpreter.recieve())
+		else:
+			return SimpleControllerState()
+			self.p_time = packet.game_info.seconds_elapsed
 
 def get_input(ascii_char=False):
 	pass
