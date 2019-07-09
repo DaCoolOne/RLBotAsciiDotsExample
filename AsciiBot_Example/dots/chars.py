@@ -54,7 +54,7 @@ class OperChar(Char):
                 '%': (lambda x, y: x % y),
 
                 'o': (lambda x, y: x | y),
-                'x': (lambda x, y: x ^ y),
+                'v': (lambda x, y: x ^ y),
                 '&': (lambda x, y: x & y),
                 '!': (lambda x, y: x != y),
 
