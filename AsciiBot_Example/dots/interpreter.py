@@ -9,7 +9,6 @@ class AsciiDotsInterpreter(object):
     def __init__(self, env, program, program_dir, run_in_parallel):
         """
         Create a new instance of the interpreter to run the program.
-
         :param dots.environment.Env env: The environment for the program
         :param str program: The code of the program
         :param str program_dir: The path to the program directory
@@ -62,7 +61,6 @@ class AsciiDotsInterpreter(object):
     def run(self, run_in_separate_thread=None, make_thread_daemon=None):
         """
         Start executing the AsciiDots code
-
         Arguments:
         run_in_separate_thread -- If set to True, the program will be interpreted in a separate thread
         make_thread_daemon -- Controls whether a thread created by enabling in_seperate_thread will be run as daemon
@@ -87,7 +85,6 @@ class AsciiDotsInterpreter(object):
         """
         Start executing the AsciiDots code
         Special use for RLBot since it simply halts but does not stop when a dots program "finishes"
-
         Arguments:
         run_in_separate_thread -- If set to True, the program will be interpreted in a separate thread
         make_thread_daemon -- Controls whether a thread created by enabling in_seperate_thread will be run as daemon
@@ -98,7 +95,8 @@ class AsciiDotsInterpreter(object):
                     self.parallel_tick()
                 else:
                     self.async_tick()
-            
+            if not self.yield_control:
+                print("Program terminated with "+len(self.env.dots)+" dots. All dots waiting = "+("true" if all(dot.state.isWaiting for dot in self.env.dots) else "false"))
             self.yield_control = False
 
     def parallel_tick(self):
