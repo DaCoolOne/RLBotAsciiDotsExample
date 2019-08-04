@@ -173,7 +173,7 @@ class AsciiAgent(BaseAgent):
 			return self.get(self.interpreter.recieve())
 		else:
 			self.p_time = packet.game_info.seconds_elapsed
-			return SimpleControllerState()			
+			return SimpleControllerState()
 
 def get_input(ascii_char=False):
 	pass
