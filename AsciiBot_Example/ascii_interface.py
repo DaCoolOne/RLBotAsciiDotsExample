@@ -172,8 +172,8 @@ class AsciiAgent(BaseAgent):
 			self.interpreter.step()
 			return self.get(self.interpreter.recieve())
 		else:
-			return SimpleControllerState()
 			self.p_time = packet.game_info.seconds_elapsed
+			return SimpleControllerState()
 
 def get_input(ascii_char=False):
 	pass
